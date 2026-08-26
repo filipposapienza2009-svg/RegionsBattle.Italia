@@ -29,7 +29,7 @@ export async function POST(req: Request) {
 
   if (event.type === 'checkout.session.completed') {
     const session = event.data.object as Stripe.Checkout.Session;
-    const regionId = session.metadata?.regionId;
+    const regionId = session.metadata?.regionId || session.client_reference_id;
 
     if (regionId) {
       console.log('Aggiorno regione:', regionId);
