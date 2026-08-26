@@ -31,11 +31,21 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
     const regionId = session.metadata?.regionId;
 
-    if (regionId) {
-      await supabase.rpc('increment_points', {
-        region_id: regionId,
-        amount: 100,
-      });
+   if (regionId) {
+      // Proviamo ad aggiornare direttamente la tabella regions
+      const { data, error } = await supabase
+        .from('regions')
+        .select('points')
+        .eq('id', regionId)
+        .single();
+
+      if (data) {
+        await supabase
+          .from('regions')
+          .update({ points: (data.points || 0) + 1 })
+          .eq('id', regionId);
+      }
+    }
     }
   }
 
