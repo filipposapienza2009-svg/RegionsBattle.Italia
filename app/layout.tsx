@@ -16,17 +16,22 @@ export const metadata: Metadata = {
   title: "Regions Battle Italia",
   description: "La battaglia delle regioni",
   verification: {
-   google: "JgK5BPkokDDDL2TJViGzARM74zI85w9qFnZuhFYq2ds",
+    google: "JgK5BPkokDDDL2TJViGzARM74zI85w9qFnZuhFYq2ds",
   },
 };
 
-export default function RootLayout({ children }: LayoutProps<"/">) {
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   return (
-    <html
-      lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
-    >
-      <body className="min-h-full flex flex-col">{children}</body>
+    <html lang="it">
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} antialiased min-h-full flex flex-col`}
+      >
+        {children}
+      </body>
     </html>
   );
 }
