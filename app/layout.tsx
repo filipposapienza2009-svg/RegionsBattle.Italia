@@ -16,10 +16,9 @@ export const metadata: Metadata = {
   title: "Regions Battle Italia",
   description: "La battaglia delle regioni",
   verification: {
-    google: "JgK5BPkokDDDL2TJViGzARM74zI85w9qFnZuhFYq2ds",
+    google: "Jgk5BPkokDDDL2TJViGzARM74zI85w9qFnZuhFYq2ds" ,
   },
 };
-
 export default function RootLayout({
   children,
 }: Readonly<{
