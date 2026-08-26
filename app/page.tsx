@@ -51,7 +51,7 @@ export default function Home() {
     fetchPoints();
   }, []);
 
-  const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?client_reference_id=${selectedRegion}`;
+ const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?client_reference_id=${selectedRegion}`;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-4 md:p-8 font-sans pb-24">
