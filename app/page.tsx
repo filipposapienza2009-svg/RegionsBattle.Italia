@@ -1,6 +1,6 @@
 
 "use client";
-
+export const dynamic = "force-dynamic";
 import { useState } from "react";
 
 // Dati iniziali per invogliare gli utenti a giocare
