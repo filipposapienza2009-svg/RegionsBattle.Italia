@@ -31,21 +31,33 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
     const regionId = session.metadata?.regionId;
 
-   if (regionId) {
-      // Proviamo ad aggiornare direttamente la tabella regions
-      const { data, error } = await supabase
+    if (regionId) {
+      console.log('Aggiorno regione:', regionId);
+
+      const { data, error: selectError } = await supabase
         .from('regions')
         .select('points')
         .eq('id', regionId)
         .single();
 
+      if (selectError) {
+        console.error('Errore SELECT Supabase:', selectError.message);
+      }
+
       if (data) {
-        await supabase
+        const { error: updateError } = await supabase
           .from('regions')
           .update({ points: (data.points || 0) + 1 })
           .eq('id', regionId);
+
+        if (updateError) {
+          console.error('Errore UPDATE Supabase:', updateError.message);
+        } else {
+          console.log('Punti aggiornati con successo!');
+        }
       }
-    }
+    } else {
+      console.error('ERRORE: regionId è vuoto nei metadata della sessione Stripe!');
     }
   }
 
