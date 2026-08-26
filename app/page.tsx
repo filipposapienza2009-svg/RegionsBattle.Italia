@@ -1,7 +1,13 @@
 
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { createClient } from "@supabase/supabase-js";
+
+const supabase = createClient(
+  process.env.NEXT_PUBLIC_SUPABASE_URL!,
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+);
 
 const initialRegions = [
   { id: "lombardia", name: "Lombardia", points: 12500, flag: "🇮🇹" },
@@ -30,13 +36,26 @@ export default function Home() {
   const [regions, setRegions] = useState(initialRegions);
   const [selectedRegion, setSelectedRegion] = useState(initialRegions[0].id);
 
-const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?client_reference_id=${selectedRegion}&prefilled_email=test@example.com`;
+  useEffect(() => {
+    const fetchPoints = async () => {
+      const { data } = await supabase.from('regions').select('*');
+      if (data && data.length > 0) {
+        setRegions((prev) =>
+          prev.map((r) => {
+            const dbData = data.find((item) => item.id === r.id);
+            return dbData ? { ...r, points: dbData.points } : r;
+          })
+        );
+      }
+    };
+    fetchPoints();
+  }, []);
+
+  const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?client_reference_id=${selectedRegion}`;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-4 md:p-8 font-sans pb-24">
       <div className="max-w-5xl mx-auto space-y-8">
-        
-        {/* Header */}
         <header className="text-center space-y-2 py-6">
           <div className="inline-flex items-center gap-2 bg-indigo-500/10 border border-indigo-500/20 px-4 py-1.5 rounded-full text-indigo-300 text-sm font-semibold mb-2">
             🇮🇹 Sfida Nazionale 2026
@@ -44,15 +63,12 @@ const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?cl
           <h1 className="text-4xl md:text-6xl font-black tracking-tight bg-gradient-to-r from-white via-indigo-200 to-indigo-400 bg-clip-text text-transparent">
             Regions Battle Italia
           </h1>
-          <p className="text-slate-400 text-base md:text-lg max-w-xl mx-auto">
+          <p className="text-slate-400 text-base md:text-xl max-w-xl mx-auto">
             Porta la tua regione in cima alla classifica globale. Ogni voto la fa salire verso la vittoria!
           </p>
         </header>
 
-        {/* Griglia Principale */}
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-          
-          {/* Classifica */}
           <div className="lg:col-span-2 bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-2xl">
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold flex items-center gap-2">
@@ -97,7 +113,6 @@ const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?cl
             </div>
           </div>
 
-          {/* Sostieni */}
           <div className="bg-slate-900/60 backdrop-blur-xl border border-slate-800 rounded-2xl p-6 shadow-2xl flex flex-col justify-between space-y-6 lg:sticky lg:top-8">
             <div>
               <h2 className="text-xl font-bold mb-2 flex items-center gap-2">
@@ -129,7 +144,7 @@ const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?cl
                   <span className="text-xs text-indigo-300 uppercase tracking-wider font-semibold block mb-1">
                     Pacchetto Sostegno
                   </span>
-                  <span className="text-3xl font-black text-white">100 Punti</span>
+                  <span className="text-3xl font-black text-white">+100 Punti</span>
                   <span className="text-xs text-slate-400 block mt-1">Valore: 1,00 €</span>
                 </div>
               </div>
@@ -139,12 +154,11 @@ const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?cl
               href={stripePaymentUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 px-6 rounded-xl text-center shadow-lg shadow-indigo-600/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] flex items-center justify-center gap-2"
+              className="w-full bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-4 px-6 rounded-xl text-center shadow-lg shadow-indigo-600/30 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] block"
             >
-              💳 Paga 1€ e Aggiungi 100 Punti
+              Paga 1€ e Aggiungi 100 Punti
             </a>
           </div>
-
         </div>
       </div>
     </main>
