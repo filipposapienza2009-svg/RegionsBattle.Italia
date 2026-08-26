@@ -30,7 +30,7 @@ export default function Home() {
   const [regions, setRegions] = useState(initialRegions);
   const [selectedRegion, setSelectedRegion] = useState(initialRegions[0].id);
 
-  const stripePaymentUrl = "https://buy.stripe.com/test_00w9AUgBa7gZcyj1r5bwk00";
+const stripePaymentUrl = `https://buy.stripe.com/test_00w9AUgBa7gzcyj1r5bwk00?client_reference_id=${selectedRegion}&prefilled_email=test@example.com`;
 
   return (
     <main className="min-h-screen bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-white p-4 md:p-8 font-sans pb-24">
